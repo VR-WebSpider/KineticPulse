@@ -1,73 +1,70 @@
-# ALS Refactored Locomotion — WebSpider Studios
+# ALS Refactored Locomotion
 
-![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.8%20%7C%205.4-0E1128?logo=unrealengine&logoColor=white)
-![Animation](https://img.shields.io/badge/Animation-Linked%20Anim%20Layers%20%26%20IK-brightgreen)
-![Language](https://img.shields.io/badge/Language-C%2B%2B%20%2F%20Blueprints-00599C?logo=c%2B%2B&logoColor=white)
-![Locomotion](https://img.shields.io/badge/Locomotion-Parkour%20%2F%20Mantling%20%2F%20Ragdoll-purple)
-![Studio](https://img.shields.io/badge/Studio-WebSpider%20Studios-crimson)
-![License](https://img.shields.io/badge/License-MIT-blue)
+A production-ready C++ character locomotion, dynamic mantling, and ragdoll recovery framework in **Unreal Engine 5** maintained and extended by **Vivekanand Rajbhar (WebSpider Studios)**.
 
-**ALS Refactored Locomotion** is a production-ready C++ character locomotion, parkour, and dynamic ragdoll framework developed and extended by **WebSpider Studios (Vivekanand Rajbhar)**, built for Unreal Engine 5.
-
-It modernizes the iconic Advanced Locomotion System V4 with native Linked Animation Layers, Control Rig foot IK, curve-driven transitions, and high-fidelity multiplayer replication.
+This project modernizes the industry-standard Advanced Locomotion System V4 with clean C++ architecture, modern Linked Animation Layers, Control Rig foot IK, and full multiplayer replication.
 
 ---
 
-## 🏃 Movement Architecture
+## ⚡ Technical Highlights
 
-```mermaid
-flowchart TD
-    Input[Enhanced Input Action] --> Char[AlsCharacter - C++]
-    Char --> MoveComp[AlsCharacterMovementComponent]
-    
-    MoveComp --> Stance[Stance: Standing / Crouching]
-    MoveComp --> Gait[Gait: Walking / Running / Sprinting]
-    MoveComp --> Mode[Movement Mode: Grounded / Falling / Ragdoll / Mantling]
-    
-    MoveComp --> FootIK[Control Rig & Pelvis Foot Placement IK]
-    MoveComp --> Mantle[Dynamic Mantle Trace & Root Motion]
-    MoveComp --> Ragdoll[Physical Ragdoll & Get Up Blend State]
-    
-    Char --> AnimInstance[AlsAnimationInstance - Linked Anim Layers]
+### 1. Modern Animation Pipeline (Linked Anim Layers)
+* **Decoupled Architecture:** Replaced legacy monolithic animation graphs with modular Linked Animation Blueprints (`AlsAnimationInstance`). This allows swapping character skeleton meshes or overlay weapon poses without duplicating locomotion logic.
+* **Blend Poses by Gameplay Tag:** Anim graph transitions evaluate dynamic tags (e.g. `Als.Gait.Sprinting`, `Als.Stance.Crouching`) rather than querying raw booleans, eliminating state desync.
+
+### 2. Multi-Gait Locomotion & Rotation Modes
+* **Gait Blending:** Seamless procedural acceleration and deceleration curves for Walking, Running, and Sprinting with footstep timing curves.
+* **Rotation Modes:**
+  * **Velocity Direction:** Natural body alignment with movement vector during free-roam traversal.
+  * **Looking Direction:** Strafe mechanics with procedural spine lean and torso twisting toward crosshairs.
+  * **Aiming Direction:** Snappy combat posture with weapon camera focus and turn-in-place animation montages.
+
+### 3. Dynamic Mantling & Physical Ragdoll
+* **2-Stage Mantle Tracing:** Performs forward capsule sweeps followed by downward ledge detection to calculate obstacle crest height and thickness. Dynamically selects low vaults, high vaults, or climb-up montages with root-motion synchronization.
+* **Ragdoll to Get-Up Blend:** Seamlessly activates physics simulation on sudden impacts. When the character comes to rest, it calculates whether the actor is facing up or down and triggers the matching get-up montage with pose snapshot caching to prevent visual snapping.
+
+### 4. Foot Placement & Terrain IK
+* Utilizes Unreal Engine's **Control Rig** with trace offsets to dynamically align feet and ankles to stairs, slopes, and rocky geometry. Pelvis height lowers smoothly to maintain grounded balance.
+
+---
+
+## 📁 Repository Structure
+
+```
+Plugins/ALS/
+├── Source/
+│   ├── ALS/                 # Core locomotion character, movement component, and settings
+│   ├── ALSCamera/           # Custom third-person camera component with pivot lag
+│   ├── ALSEditor/           # Animation modifier utilities and custom anim graph nodes
+│   └── ALSExtras/           # Example character implementations and player input
+└── Content/                 # Anim sequences, blend spaces, and Control Rig assets
+Source/                      # Standalone UE5 project target and game module
 ```
 
-### 1. Locomotion & Gait Control
-* **Movement Modes**: Seamless blend between Grounded, In-Air, Mantling, and Ragdoll states.
-* **Gait Mechanics**: Distinct locomotion speeds and curves for Walking, Running, and Sprinting with acceleration banking and deceleration skids.
-* **Rotation Modes**: Velocity Direction, Looking Direction, and Aiming Direction with procedural spine lean and head tracking.
-
-### 2. Procedural & Physical Systems
-* **Dynamic Mantling**: 2-stage raycast and sphere trace system detecting ledges, obstacle heights, and low vaults with root-motion synchronization.
-* **Dynamic Ragdoll & Recovery**: Real-time transition to physics simulation upon high-impact collisions with automatic front/back get-up montage selection.
-* **Foot Placement IK**: Pelvis offset compensation with trace-driven foot and toe alignment across uneven terrain.
-
-### 3. Modular Architecture
-* Fully modularized into `ALS`, `ALSCamera`, `ALSExtras`, and `ALSEditor` runtime and uncooked modules.
-* Clean separation between character movement math in C++ and visual presentation in Linked Animation Blueprints.
-
 ---
 
-## 🛠️ How to Build and Run in Unreal Engine
+## 🛠️ How to Build & Run
 
-### Prerequisites
-* **Unreal Engine**: 5.8 or 5.7 installed via Epic Games Launcher
-* **IDE**: Visual Studio 2022 (with *Game Development with C++* workload)
-* **OS**: Windows 10/11 (64-bit)
+### Requirements
+* Unreal Engine 5.8 (or 5.7 / 5.4)
+* Visual Studio 2022 (with *Game Development with C++* workload)
+* Windows 10/11 64-bit
 
 ### Steps
-1. Clone this repository:
+1. Clone the repository:
    ```bash
    git clone https://github.com/VR-WebSpider/ALSRefactoredLocomotion.git
    ```
-2. Right-click `ALSRefactoredLocomotion.uproject` and select **Generate Visual Studio project files**.
+2. Right-click `ALSRefactoredLocomotion.uproject` → **Generate Visual Studio project files**.
 3. Open `ALSRefactoredLocomotion.sln` in Visual Studio 2022.
-4. Set the build configuration to **Development Editor** and platform to **Win64**.
-5. Launch the project (F5 or double-click `ALSRefactoredLocomotion.uproject`).
-6. Open the ALS demonstration map located in `/ALS/Maps/` to test traversal, obstacle mantling, and ragdoll recovery.
+4. Set build configuration to **Development Editor** | **Win64**.
+5. Build and launch (F5).
+6. Open the demo map in `/ALS/Maps/` to test traversal over ramps, vaults, stairs, and ragdoll test areas.
 
 ---
 
-## 🏢 Credits & Attribution
+## 📜 Credits & License
 
-* Developed and extended by **WebSpider Studios (Vivekanand Rajbhar)**.
-* Built upon foundational C++ refactored locomotion architecture authored by **Sixze** and community contributors. Licensed under the [MIT License](LICENSE).
+* Maintained and extended by **Vivekanand Rajbhar (WebSpider Studios)**.
+* Built upon foundational C++ locomotion architecture authored by **Sixze** and community contributors.
+* Licensed under the [MIT License](LICENSE).
