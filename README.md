@@ -1,8 +1,8 @@
-# ALS Refactored Locomotion
+# KineticPulse: Dynamic Motion Engine
 
-A production-ready C++ character locomotion, dynamic mantling, and ragdoll recovery framework in **Unreal Engine 5** maintained and extended by **Vivekanand Rajbhar (WebSpider Studios)**.
+A next-generation character locomotion and procedural traversal framework built in **Unreal Engine 5 (C++)** by **Vivekanand Rajbhar (WebSpider Studios)**.
 
-This project modernizes the industry-standard Advanced Locomotion System V4 with clean C++ architecture, modern Linked Animation Layers, Control Rig foot IK, and full multiplayer replication.
+This project modernizes industry-standard locomotion architecture with clean C++ modularity, Linked Animation Layers, Control Rig foot IK, and full multiplayer replication.
 
 ---
 
@@ -53,7 +53,7 @@ Source/                      # Standalone UE5 project target and game module
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/VR-WebSpider/ALSRefactoredLocomotion.git
+   git clone https://github.com/VR-WebSpider/KineticPulse.git
    ```
 2. Right-click `ALSRefactoredLocomotion.uproject` → **Generate Visual Studio project files**.
 3. Open `ALSRefactoredLocomotion.sln` in Visual Studio 2022.
